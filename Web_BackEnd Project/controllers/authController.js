@@ -32,11 +32,12 @@ exports.registerUser = async (req, res) => {
 		const otp = crypto.randomInt(100000, 999999) // Generate a 6-digit OTP
 		const otpExpires = new Date(Date.now() + 5 * 60 * 1000) // OTP expires in 5 minutes
 
-		const hashedPassword = await bcrypt.hash(password, 10)
-
+		// Note: password is hashed automatically by the User model's
+		// pre('save') hook — do NOT hash it here too, or bcrypt.compare()
+		// in loginUser will never match (double-hashing bug).
 		const newUser = new User({
 			username,
-			password: hashedPassword,
+			password,
 			email,
 			firstName,
 			lastName,
