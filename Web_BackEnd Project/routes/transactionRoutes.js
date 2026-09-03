@@ -3,10 +3,16 @@ const router = express.Router()
 const axios = require('axios')
 const User = require('../models/userModel')
 
+// The transaction microservice (Go) runs as a separate service. Locally it's
+// on localhost:8081; in production set TRANSACTION_SERVICE_URL to that
+// service's deployed URL (e.g. Render service URL) as an env var.
+const TRANSACTION_SERVICE_URL =
+	process.env.TRANSACTION_SERVICE_URL || 'http://localhost:8081'
+
 router.post('/create-transaction', async (req, res) => {
 	try {
 		const response = await axios.post(
-			'http://localhost:8081/transaction',
+			`${TRANSACTION_SERVICE_URL}/transaction`,
 			req.body
 		)
 		res.json({ success: true, paymentForm: response.data })
@@ -20,7 +26,7 @@ router.post('/create-transaction', async (req, res) => {
 
 router.post('/payment', async (req, res) => {
 	try {
-		const response = await axios.post('http://localhost:8081/payment', req.body)
+		const response = await axios.post(`${TRANSACTION_SERVICE_URL}/payment`, req.body)
 		res.json({ success: true, message: response.data })
 	} catch (error) {
 		console.error('Error processing payment:', error)
