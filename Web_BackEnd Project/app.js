@@ -4,7 +4,6 @@ const session = require('express-session')
 const mongoose = require('mongoose')
 const { GoogleGenerativeAI } = require('@google/generative-ai')
 const authRoutes = require('./routes/authRoutes')
-const apiRoutes = require('./routes/apiRoutes')
 const mainRoutes = require('./routes/mainRoutes')
 const transactionRoutes = require('./routes/transactionRoutes')
 
@@ -71,7 +70,6 @@ app.get('/ai-generate', async (req, res) => {
 })
 
 app.use('/auth', authRoutes)
-app.use('/api', apiRoutes)
 app.use('/', mainRoutes)
 app.use('/transaction', transactionRoutes)
 
