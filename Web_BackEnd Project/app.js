@@ -6,6 +6,10 @@ const { GoogleGenerativeAI } = require('@google/generative-ai')
 const authRoutes = require('./routes/authRoutes')
 const mainRoutes = require('./routes/mainRoutes')
 const transactionRoutes = require('./routes/transactionRoutes')
+const authMiddleware = require('./middleware/authMiddleware')
+// NOTE: landmarkRoutes and apiRoutes were removed — their controllers
+// (landmarkController.js / apiController.js) were never added to this repo,
+// so requiring those route files crashes the server on startup.
 
 require('dotenv').config()
 
@@ -41,6 +45,10 @@ app.use(
 		cookie: { secure: false },
 	})
 )
+
+// Makes `loggedIn` / `user` available in every view (res.locals) without
+// each controller having to set them manually.
+app.use(authMiddleware)
 
 // Route to handle Gemini API integration
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
