@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {createLandmark, getAllLandmarks, getLandmarkById, updateLandmark, deleteLandmark} = require('../controllers/landmarkController');
+const {createLandmark, getAllLandmarks, getLandmarkById, updateLandmark, deleteLandmark, uploadMiddleware} = require('../controllers/landmarkController');
 
-router.post('/', createLandmark);
+router.post('/', uploadMiddleware, createLandmark);
 router.get('/', getAllLandmarks);
 router.get('/:id', getLandmarkById);
 router.put('/:id', updateLandmark);
