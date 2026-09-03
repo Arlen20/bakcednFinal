@@ -1,15 +1,18 @@
 const Transaction = require('../models/transactionModel')
 const User = require('../models/userModel')
+const Landmark = require('../models/landmarkModel')
 
 exports.indexPage = async (req, res) => {
 	const user = req.session.user
 	const loggedIn = req.session.isLoggedIn || false
 	const isAdmin = loggedIn && user && user.role === 'admin'
 
-	// Note: the landmarks feature (Landmark model/controller) was never
-	// implemented in this project, so we render with an empty list instead
-	// of crashing on a missing model.
-	const landmarks = []
+	let landmarks = []
+	try {
+		landmarks = await Landmark.find().sort({ publishedDate: -1 })
+	} catch (error) {
+		console.error('Error fetching landmarks for homepage:', error)
+	}
 
 	res.render('index', { landmarks, user, loggedIn, isAdmin })
 }
