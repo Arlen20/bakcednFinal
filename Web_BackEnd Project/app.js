@@ -4,12 +4,13 @@ const session = require('express-session')
 const mongoose = require('mongoose')
 const { GoogleGenerativeAI } = require('@google/generative-ai')
 const authRoutes = require('./routes/authRoutes')
+const landmarkRoutes = require('./routes/landmarkRoutes')
 const mainRoutes = require('./routes/mainRoutes')
 const transactionRoutes = require('./routes/transactionRoutes')
 const authMiddleware = require('./middleware/authMiddleware')
-// NOTE: landmarkRoutes and apiRoutes were removed — their controllers
-// (landmarkController.js / apiController.js) were never added to this repo,
-// so requiring those route files crashes the server on startup.
+// NOTE: apiRoutes is still disabled — its controller (apiController.js) was
+// never added to this repo, so requiring it would crash the server on
+// startup. landmarkRoutes is back: its model/controller were rebuilt.
 
 require('dotenv').config()
 
@@ -78,6 +79,7 @@ app.get('/ai-generate', async (req, res) => {
 })
 
 app.use('/auth', authRoutes)
+app.use('/landmarks', landmarkRoutes)
 app.use('/', mainRoutes)
 app.use('/transaction', transactionRoutes)
 
